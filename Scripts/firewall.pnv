@@ -1,0 +1,12 @@
+println [!] FIREWALL ALERT: Defensive counter-measure active!
+print [?] Override manual lock? Press [Y] to confirm or [N] to abort: 
+key user_choice
+
+println 
+println [>] Key captured: %user_choice%
+sleep 300
+
+println [*] Disabling proxy traceroute...
+sleep 500
+println [*] Firewall dropped. Returning to main sequence...
+sleep 300

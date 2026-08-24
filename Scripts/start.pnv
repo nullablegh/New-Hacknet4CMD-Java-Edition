@@ -1,0 +1,18 @@
+clear
+volume 80
+play ambient /bg
+
+println ====================================================
+println           PROMETHEUS SECURE GATEWAY v4.02         
+println ====================================================
+println [!] WARNING: Unauthorized access is strictly logged.
+println
+let attempts 3
+let current_step 1
+
+println Target Node: 192.168.1.104 (Subnet Proxy)
+print Enter access password: 
+input pass
+
+# 進入入侵主程序
+goto hack.pnv
