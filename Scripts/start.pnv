@@ -1,0 +1,7 @@
+clear
+volume 80
+play ambient /bg
+musicloop
+
+color cyan
+goto menu

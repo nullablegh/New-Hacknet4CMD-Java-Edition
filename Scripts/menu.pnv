@@ -1,0 +1,67 @@
+@MENU_1
+clear
+play ambient /bg
+let input 0
+println
+println  ██╗  ██╗  █████╗   █████╗  ██╗  ██╗ ███╗  ██╗ ███████╗ ████████╗
+println  ██║  ██║ ██╔══██╗ ██╔══██╗ ██║ ██╔╝ ████╗ ██║ ██╔════╝ ╚══██╔══╝
+println  ███████║ ███████║ ██║  ╚═╝ █████═╝  ██╔██╗██║ █████╗      ██║
+println  ██╔══██║ ██╔══██║ ██║  ██╗ ██╔═██╗  ██║╚████║ ██╔══╝      ██║
+println  ██║  ██║ ██║  ██║ ╚█████╔╝ ██║ ╚██╗ ██║ ╚███║ ███████╗    ██║
+println  ╚═╝  ╚═╝ ╚═╝  ╚═╝  ╚════╝  ╚═╝  ╚═╝ ╚═╝  ╚══╝ ╚══════╝    ╚═╝   for CMD // Java Edition | JUSTFUN
+println
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (1) Play                   |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (2) Mods                   |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (3) Settings               |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (4) Quit                   |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+key input
+if %input% == 1 goto MENU_2
+if %input% == 4 goto END
+if %input% == 2 goto WIP
+if %input% == 3 goto WIP
+goto MENU_1
+@MENU_2
+clear
+let input 0
+println
+println  ██╗  ██╗  █████╗   █████╗  ██╗  ██╗ ███╗  ██╗ ███████╗ ████████╗
+println  ██║  ██║ ██╔══██╗ ██╔══██╗ ██║ ██╔╝ ████╗ ██║ ██╔════╝ ╚══██╔══╝
+println  ███████║ ███████║ ██║  ╚═╝ █████═╝  ██╔██╗██║ █████╗      ██║
+println  ██╔══██║ ██╔══██║ ██║  ██╗ ██╔═██╗  ██║╚████║ ██╔══╝      ██║
+println  ██║  ██║ ██║  ██║ ╚█████╔╝ ██║ ╚██╗ ██║ ╚███║ ███████╗    ██║
+println  ╚═╝  ╚═╝ ╚═╝  ╚═╝  ╚════╝  ╚═╝  ╚═╝ ╚═╝  ╚══╝ ╚══════╝    ╚═╝   for CMD // Java Edition | JUSTFUN
+println
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (1) Login                  |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (2) Continue [WHAT]        |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (3) Register               |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (4) Back                   |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+key input
+if %input% == 4 goto MENU_1
+if %input% == 1 goto WIP
+if %input% == 2 goto WIP
+if %input% == 3 goto WIP
+goto MENU_2
+
+@END
+end 0
+
+@WIP
+println Coming Soon!
+key any
+goto MENU_1
