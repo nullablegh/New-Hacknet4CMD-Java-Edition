@@ -11,17 +11,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-private static final Scanner scanner = new Scanner(System.in);
 private final Manager manager = new Manager();
 private Clip theClip = null;
 private int musicVolume = 100;
 private int startOffset = 0;
 private int loop = 0;
-
+String currentScript = "start.pnv";
 // 腳本跳轉控制標記
 private boolean isRedirecting = false;
 private String redirectTarget = null;
-
+private int returnVal = 0;
 // 指令解析宣告
 private final Command endCmd = new Command("end", 1);
 private final Command keyCmd = new Command("key", 1);
@@ -104,9 +103,10 @@ private void setupCommands() {
         if (args.length < 2) return;
         String path = "audios/musics/" + args[0] + ".wav";
         if (Objects.equals(args[1], "/bg")) {
-            new Thread(() -> playSound(path, false)).start();
+            new Thread(() -> returnVal = playSound(path, false)
+            ).start();
         } else if (Objects.equals(args[1], "/m")) {
-            playSound(path, true);
+            returnVal = playSound(path, true);
         }
     });
 
@@ -405,6 +405,7 @@ public void runScript(String filePath) {
         System.out.println("Error reading script file: " + e.getMessage());
         return;
     }
+    currentScript = filePath;
 
     // 1. 預先掃描標籤 (Label)
     Map<String, Integer> labels = new HashMap<>();
@@ -429,7 +430,7 @@ public void runScript(String filePath) {
         // 2. 攔截 IF 跳轉指令
         if (line.startsWith("if ")) {
             String[] parts = line.split("\\s+");
-            if (parts.length >= 6 && parts[4].equalsIgnoreCase("goto")) {
+            if (parts.length >= 6 && parts[4].equals("goto")) {
                 String left = parts[1];
                 String op = parts[2];
                 String right = parts[3];
@@ -535,11 +536,21 @@ private String formatVariables(String text) {
     return text;
 }
 
-public void playSound(String filePath, boolean waitToFinish) {
+public int playSound(String filePath, boolean waitToFinish) {
     File soundFile = new File(filePath);
     if (!soundFile.exists()) {
-        System.out.println("Audio file not found: " + filePath);
-        return;
+        if (!(new File("audios.zip").exists())) FileDownloader.download("https://github.com/nullablegh/Files/releases/download/a/audios.zip"
+                , "audios.zip");
+        try {
+            Thread.sleep(10);
+            UnzipUtility.unzip("audios.zip","");
+            returnVal = 2;
+        } catch (IOException e) {
+            returnVal = 1;
+        } catch (InterruptedException e) {
+            returnVal = 1;
+            throw new RuntimeException(e);
+        }
     }
 
     try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile)) {
@@ -555,7 +566,9 @@ public void playSound(String filePath, boolean waitToFinish) {
         }
     } catch (Exception e) {
         System.out.println("Failed to play audio: " + e.getMessage());
+        returnVal = 1;
     }
+    return returnVal;
 }
 
 public void setVolume(Clip clip, float volume) {
