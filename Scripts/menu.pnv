@@ -43,7 +43,7 @@ println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 println   | (1) Login                  |
 println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-println   | (2) Continue [WHAT]        |
+println   | (2) Continue [WIP]        |
 println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 println   | (3) Register               |
