@@ -20,11 +20,15 @@ println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 println   | (3) Settings               |
 println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-println   | (4) Quit                   |
+println   | (4) Credits                |
+println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+println   ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+println   | (5) Quit                   |
 println   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 key input
 if %input% == 1 goto MENU_2
-if %input% == 4 goto END
+if %input% == 4 goto CREDITS
+if %input% == 5 goto END
 if %input% == 2 goto WIP
 if %input% == 3 goto WIP
 goto MENU_1
@@ -65,3 +69,5 @@ end 0
 println Coming Soon!
 key any
 goto MENU_1
+@CREDITS
+goto credits.pnv

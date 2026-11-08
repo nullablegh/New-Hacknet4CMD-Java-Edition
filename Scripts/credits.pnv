@@ -1,0 +1,38 @@
+stopmusic
+play SpaceCat /bg
+clear
+sleep 1000
+color cyan
+typeln "======================================================================"
+typeln " [ SYSTEM INFORMATION ]"
+typeln " Project Name : Hacknet Terminal Engine (Java + C++ JNI Edition)"
+typeln " Architecture : Hybrid JVM & Win32 Native Console"
+typeln " Database     : SQLite (sqlite-jdbc v3.54.1.0)"
+typeln "======================================================================"
+color green
+typeln " [ DEVELOPMENT TEAM & CONTRIBUTORS ]"
+typeln " Lead Developer : iIiNullableiIi"
+typeln " Core Engine    : Java 25 & C++ Low-Level Win32 API Integration"
+typeln " VT100 Engine   : Custom Native Terminal Input & Font Management"
+typeln ""
+color yellow
+typeln " [ OPEN SOURCE LIBRARIES & DEPENDENCIES ]"
+typeln " * SQLite JDBC (xerial) - Database Persistence Engine"
+typeln "   https://github.com/xerial/sqlite-jdbc"
+typeln " * ProGuard - Code Obfuscation & Optimization"
+typeln "   https://www.guardsquare.com/proguard"
+typeln ""
+color gray
+typeln " [ SPECIAL THANKS ]"
+typeln " * Classic Hacknet Atmosphere & Terminal Aesthetics"
+typeln " * Playtesters, Testers, and Everyone Supporting Low-Level Code Experiments"
+typeln ""
+typeln "======================================================================"
+typeln " Connection secured. Terminal session active."
+typeln "======================================================================"
+color reset
+type " Press any key to return..."
+
+key press_any
+clear
+goto start.pnv

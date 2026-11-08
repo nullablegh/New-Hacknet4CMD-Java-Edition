@@ -1,33 +1,62 @@
 package hnsMgr;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
+import java.io.File;
+import java.sql.*;
 
 public class SessionManager {
     private static final String SAVE_DIR = "saves/";
 
+    // 取得指定存檔槽的 SQLite 連線
+    private static Connection getConnection(String saveName) throws SQLException {
+        File dir = new File(SAVE_DIR);
+        if (!dir.exists()) dir.mkdirs();
+        String dbUrl = "jdbc:sqlite:" + SAVE_DIR + saveName + ".db";
+        return DriverManager.getConnection(dbUrl);
+    }
+
     // 儲存當前工作階段
     public static boolean saveSession(String saveName, Manager manager, VirtualFileSystem vfs) {
-        try {
-            File dir = new File(SAVE_DIR);
-            if (!dir.exists()) dir.mkdirs();
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS session_data (" +
+                "category TEXT NOT NULL, " +
+                "key TEXT NOT NULL, " +
+                "value TEXT, " +
+                "PRIMARY KEY (category, key));";
 
-            File saveFile = new File(SAVE_DIR + saveName + ".sav");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
+        try (Connection conn = getConnection(saveName);
+             Statement stmt = conn.createStatement()) {
+
+            stmt.execute(createTableSQL);
+
+            // 使用交易提升寫入效能
+            conn.setAutoCommit(false);
+
+            String upsertSQL = "INSERT INTO session_data(category, key, value) VALUES(?, ?, ?) " +
+                    "ON CONFLICT(category, key) DO UPDATE SET value = excluded.value;";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(upsertSQL)) {
                 // 1. 儲存所有腳本變數
-                writer.write("[VARIABLES]\n");
                 for (String key : manager.getVariableKeys()) {
-                    writer.write(key + "=" + manager.getRawVariable(key) + "\n");
+                    pstmt.setString(1, "VARIABLES");
+                    pstmt.setString(2, key);
+                    pstmt.setString(3, manager.getRawVariable(key));
+                    pstmt.executeUpdate();
                 }
 
                 // 2. 儲存當前 VFS 狀態資訊
-                writer.write("[VFS]\n");
-                writer.write("current_node=" + vfs.getCurrentNodeId() + "\n");
-                writer.write("current_path=" + vfs.getCurrentPath() + "\n");
+                pstmt.setString(1, "VFS");
+                pstmt.setString(2, "current_node");
+                pstmt.setString(3, vfs.getCurrentNodeId());
+                pstmt.executeUpdate();
+
+                pstmt.setString(1, "VFS");
+                pstmt.setString(2, "current_path");
+                pstmt.setString(3, vfs.getCurrentPath());
+                pstmt.executeUpdate();
             }
+
+            conn.commit();
             return true;
-        } catch (IOException e) {
+        } catch (SQLException e) {
             System.out.println("Error saving session: " + e.getMessage());
             return false;
         }
@@ -35,43 +64,35 @@ public class SessionManager {
 
     // 載入工作階段
     public static boolean loadSession(String saveName, Manager manager, VirtualFileSystem vfs) {
-        File saveFile = new File(SAVE_DIR + saveName + ".sav");
+        File saveFile = new File(SAVE_DIR + saveName + ".db");
         if (!saveFile.exists()) {
             System.out.println("Save file not found: " + saveFile.getPath());
             return false;
         }
 
-        try {
-            List<String> lines = Files.readAllLines(saveFile.toPath());
-            String section = "";
+        String querySQL = "SELECT category, key, value FROM session_data;";
 
-            for (String line : lines) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
+        try (Connection conn = getConnection(saveName);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(querySQL)) {
 
-                if (line.startsWith("[") && line.endsWith("]")) {
-                    section = line.toUpperCase();
-                    continue;
-                }
+            while (rs.next()) {
+                String category = rs.getString("category");
+                String key = rs.getString("key");
+                String value = rs.getString("value");
 
-                if (section.equals("[VARIABLES]")) {
-                    String[] kv = line.split("=", 2);
-                    if (kv.length == 2) {
-                        manager.setVariable(kv[0], kv[1]);
-                    }
-                } else if (section.equals("[VFS]")) {
-                    String[] kv = line.split("=", 2);
-                    if (kv.length == 2) {
-                        if (kv[0].equals("current_node")) {
-                            vfs.mount(kv[1]);
-                        } else if (kv[0].equals("current_path")) {
-                            vfs.cd(kv[1]);
-                        }
+                if ("VARIABLES".equals(category)) {
+                    manager.setVariable(key, value);
+                } else if ("VFS".equals(category)) {
+                    if ("current_node".equals(key)) {
+                        vfs.mount(value);
+                    } else if ("current_path".equals(key)) {
+                        vfs.cd(value);
                     }
                 }
             }
             return true;
-        } catch (IOException e) {
+        } catch (SQLException e) {
             System.out.println("Error loading session: " + e.getMessage());
             return false;
         }
